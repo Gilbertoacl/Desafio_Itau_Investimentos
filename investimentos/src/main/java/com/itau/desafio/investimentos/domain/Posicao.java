@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Prosicao {
+public class Posicao {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
