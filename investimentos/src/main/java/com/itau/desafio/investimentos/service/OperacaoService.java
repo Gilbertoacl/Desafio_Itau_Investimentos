@@ -4,6 +4,7 @@ import com.itau.desafio.investimentos.domain.*;
 import com.itau.desafio.investimentos.repository.CotacaoRepository;
 import com.itau.desafio.investimentos.repository.OperacaoRepository;
 import com.itau.desafio.investimentos.repository.PosicaoRepository;
+import com.itau.desafio.investimentos.util.CalculoUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -64,9 +66,11 @@ public class OperacaoService {
 
     private void atualizaCompra(Posicao posicao, Operacao operacao) {
         int novaQuantidade = posicao.getQuantidade() + operacao.getQuantidade();
-        BigDecimal totalInvestidoAtual = posicao.getPrecoMedio().multiply(BigDecimal.valueOf(posicao.getQuantidade()));
-        BigDecimal totalinvestidoNovo = operacao.getPrecoUnitario().multiply(BigDecimal.valueOf(operacao.getQuantidade()));
-        BigDecimal precoMedio = totalInvestidoAtual.add(totalinvestidoNovo).divide(BigDecimal.valueOf(novaQuantidade), 6, RoundingMode.HALF_UP);
+
+        BigDecimal precoMedio = CalculoUtil.calcularPrecoMedio(
+                List.of(posicao.getPrecoMedio(), operacao.getPrecoUnitario()),
+                List.of(posicao.getQuantidade(), operacao.getQuantidade())
+        );
 
         posicao.setQuantidade(novaQuantidade);
         posicao.setPrecoMedio(precoMedio);
@@ -76,7 +80,7 @@ public class OperacaoService {
         int novaQuantidade = posicao.getQuantidade() - operacao.getQuantidade();
 
         if (novaQuantidade < 0 ) {
-            throw new IllegalArgumentException("A venda excede a posição atual");
+            throw new IllegalArgumentException("[OperacaoService] A venda excede a posição atual");
         }
 
         posicao.setQuantidade(novaQuantidade);
