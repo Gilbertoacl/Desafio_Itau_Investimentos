@@ -42,13 +42,14 @@ A aplicação simula uma API de investimentos com as seguintes funcionalidades:
 
 ## 📈 Endpoints principais
 
-- `POST /operacoes`: registrar uma operação (compra ou venda)
-- `GET /ativos/{id}/cotacao`: retornar última cotação do ativo
-- `GET /usuarios/{id}/posicao`: retornar posição consolidada do cliente
-- `GET /usuarios/{id}/preco-medio`: retorna preço médio por ativo
-- `GET /relatorios/top-corretagem`: top 10 por corretagem
-- `GET /relatorios/top-posicao`: top 10 por posição
-- `GET /relatorios/ganhos-corretora`: total de corretagem da corretora
+- `POST /api/operacoes`: registrar uma operação (compra ou venda).
+- `POST /api/cotacoes`: registrar uma cotação.
+- `GET /api/cotacoes/ativo/{1}/ultima`: retornar última cotação do ativo.
+- `GET /api/posicoes/{id}`: retornar posição consolidada do cliente.
+- `GET /api/usuarios/{id}/ativos/{id}/preco-medio`: retornar o preço médio por ativo para um usuário.
+- `GET /api/relatorios/top-clientes-posicao`: Top 10 clientes com maiores posições.
+- `GET /api/relatorios/top-clientes-corretagem`: Top 10 clientes que mais pagaram corretagem.
+- `GET /api/relatorios/corretagens`: retorna o valor financeiro ganho pela corretora com as corretagens.
 
 Documentação Swagger disponível em `/swagger-ui.html`.
 
@@ -74,7 +75,6 @@ Documentação Swagger disponível em `/swagger-ui.html`.
 
 - Testes unitários com JUnit 5
 - Cobertura do cálculo de preço médio e corretagem
-- Tentativa de aplicar **PIT Mutation Testing** com `pitest-junit5-plugin`, porém houve incompatibilidade de repositório no ambiente local.
 
 ---
 
@@ -110,8 +110,7 @@ DB_PASSWORD
 ## 🚀 Como rodar
 
 ```bash
-mvn clean install
-mvn spring-boot:run
+docker-compose up --build
 ```
 
 Kafka irá consumir o tópico `cotacoes` automaticamente se ativo.
